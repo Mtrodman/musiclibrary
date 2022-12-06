@@ -1,3 +1,4 @@
-import {createContext} from 'react'
-//can pass a variable into createContext which represents its defauly value.
+import { createContext } from "react";
+//the [] defines the context container for the data object
+//mimics the useState argument
 export const DataContext = createContext([])
