@@ -1,11 +1,7 @@
-// We want to develop two different views within GalleryItem,
-//one to represent the standard at-a-glance preview,
-//and a detail view if a user clicks on one of these results.
-//To do so, we can use the ternary operator in our return statement.
-import { useState } from 'react' 
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-function GalleryItem(props){
+function GalleryItem(props) {
     let [view, setView] = useState(false)
 
     const simpleStyle = {
@@ -13,17 +9,6 @@ function GalleryItem(props){
         'height': '20vh',
         'border': '1px solid black',
         'margin': '2px'
-    }
-    
-    const detailStyle = {
-        'width': '80vw',
-        'height': '20vh',
-        'border': '1px solid black',
-        'margin': '2px',
-        'backgroundImage': `url(${props.item.artworkUrl100})`,
-        'backgroundRepeat': 'no-repeat',
-        'backgroundSize': 'cover',
-        'color': 'yellow'
     }
 
     const simpleView = () => {
@@ -35,20 +20,28 @@ function GalleryItem(props){
         )
     }
 
+    const detailStyle = {
+        'width': '80vw',
+        'height': '20vh',
+        'border': '1px solid black',
+        'margin': '2px',
+        // this url isn't working for some reason
+        'backgroundImage': `url(${props.item.artworkUrl100})`,
+        'backgroundRepeat': 'no-repeat',
+        'backgroundSize': 'cover',
+        'color': 'yellow'
+    }
+
     const detailView = () => {
         return (
-            <div style={detailStyle}>
+            <div stlye={detailStyle}>
                 <h2>{props.item.trackName}</h2>
-                <h3>
-                    <Link to={`/artist/${props.item.artistId}`}>
-                        {props.item.artistName}
-                    </Link>
-                </h3>
-                <h3>
-                    <Link to={`/album/${props.item.collectionId}`}>
-                        {props.item.collectionName}
-                    </Link>
-                </h3>
+                <Link to={`/artist/${props.item.artistId}`}>
+                    <h3>{props.item.artistName}</h3>
+                </Link>
+                <Link to={`/album/${props.item.collectionId}`}>
+                    <h3>{props.item.collectionName}</h3>
+                </Link>
                 <h4>{props.item.primaryGenreName}</h4>
                 <h4>{props.item.releaseDate}</h4>
             </div>
@@ -56,11 +49,9 @@ function GalleryItem(props){
     }
 
     return (
-        <div onClick={() =>setView(!view)} style={{'display': 'inline-block'}}>
-            {/* This simple ternary shows the simple view when 'view' is false! */}
+        <div onClick={() => setView(!view)} style={{ 'display': 'inline-block' }}>
             {view ? detailView() : simpleView()}
         </div>
     )
 }
-
 export default GalleryItem
