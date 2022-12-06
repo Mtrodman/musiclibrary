@@ -1,20 +1,19 @@
-const API_URL = 'https://itunes.apple.com/search?term='
-const fetchSearch = async (search) => {
-    const response = await fetch(API_URL + search)
+const API_URL = `https://itunes.apple.com/search?term=`
+
+const fetchSearch = async (searchTerm) => {
+    const response = await fetch(API_URL + searchTerm)
     const resData = await response.json()
     return resData.results
 }
 
-// Being that our fetchSearch function returns a promise,
-// We want wrapPromise to take that promise as an argument.
+//take the promise fetchSearch returns, and give it to wrapPromise as an argument
 const wrapPromise = (promise) => {
-    // the default state of our promise. We assume it to be pending.
+    //default state of promise:
     let status = 'pending'
-    // result will store the data we get from the promise.
+    //result will store the data we get from the promise
     let result = ''
-    // our suspender represents the resolution of the promise.
-    // An ideal resolution should flag the status to "success"
-    // And our catch should set it to "error".
+    //suspender represents the resolution of the promise
+    //ideal resolution: "success", catch should set to "error"
     let suspender = promise.then(response => {
         status = 'success'
         result = response
@@ -23,27 +22,24 @@ const wrapPromise = (promise) => {
         result = err
     })
 
-    // finally, we should plan to return an object that emits
-    // a different response depending on our status:
+    //return an object that emits a different response depending on status
     return {
         read() {
-            // if the promise hasn't triggered, run it!
-            if(status === 'pending') {
+            if (status === 'pending') {
                 throw suspender
             }
-            // otherwise, send an error 
             else if (status === 'error') {
                 throw result
             }
-            // if the status is neither "pending" nor "error",
-            // we should just send the result forward!
-            return result
+            else {
+                return result
+            }
         }
     }
 }
 
-export const createResource = (search) => {
+export const createResource = (searchTerm) => {
     return {
-        result: wrapPromise(fetchSearch(search))
+        result: wrapPromise(fetchSearch(searchTerm))
     }
 }
